@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>ShopM3 — Improved Design</title>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<style>
+  /* ── MD3 Color Tokens ─────────────────────────────────── */
+  :root {
+    --md-primary:            #5B21B6;
+    --md-on-primary:         #FFFFFF;
+    --md-primary-container:  #EDE9FE;
+    --md-on-primary-container: #2E0F6E;
+    --md-secondary:          #7C3AED;
+    --md-secondary-container:#F5F3FF;
+    --md-on-secondary-container: #4C1D95;
+    --md-tertiary:           #0D9488;
+    --md-tertiary-container: #CCFBF1;
+    --md-on-tertiary-container: #134E4A;
+    --md-error:              #B91C1C;
+    --md-error-container:    #FEE2E2;
+    --md-on-error-container: #7F1D1D;
+    --md-surface:            #FAFAFA;
+    --md-surface-variant:    #F3F0F9;
+    --md-on-surface:         #1C1B1E;
+    --md-on-surface-variant: #49454F;
+    --md-outline:            #CAC4D0;
+    --md-outline-variant:    #E7E0EC;
+    --md-inverse-surface:    #313033;
+    --md-inverse-on-surface: #F4EFF4;
+    --md-scrim:              rgba(0,0,0,.32);
+
+    /* Typography scale */
+    --type-display-large:    57px/64px 'Google Sans Display', 'Roboto', sans-serif;
+    --type-headline-large:   32px/40px 'Google Sans', 'Roboto', sans-serif;
+    --type-headline-medium:  28px/36px 'Google Sans', 'Roboto', sans-serif;
+    --type-title-large:      22px/28px 'Google Sans', 'Roboto', sans-serif;
+    --type-title-medium:     16px/24px 'Google Sans', 'Roboto Medium', sans-serif;
+    --type-body-large:       16px/24px 'Roboto', sans-serif;
+    --type-body-medium:      14px/20px 'Roboto', sans-serif;
+    --type-label-large:      14px/20px 'Roboto Medium', sans-serif;
+    --type-label-medium:     12px/16px 'Roboto Medium', sans-serif;
+    --type-label-small:      11px/16px 'Roboto Medium', sans-serif;
+
+    --radius-xs: 4px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 28px;
+    --radius-full: 9999px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Google Sans', 'Roboto', system-ui, sans-serif;
+    background: var(--md-surface);
+    color: var(--md-on-surface);
+    width: 1440px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Top App Bar ─────────────────────────────────────── */
+  .top-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 64px;
+    background: var(--md-surface);
+    border-bottom: 1px solid var(--md-outline-variant);
+    display: flex;
+    align-items: center;
+    padding: 0 24px 0 0;
+    gap: 8px;
+    z-index: 100;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  }
+  .top-bar-logo {
+    width: 280px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .logo-avatar {
+    width: 36px; height: 36px;
+    background: var(--md-primary);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--md-on-primary);
+    font: 700 14px 'Google Sans', sans-serif;
+    letter-spacing: .5px;
+  }
+  .logo-text {
+    font: 700 18px/1 'Google Sans', sans-serif;
+    color: var(--md-on-surface);
+  }
+
+  /* MD3 Search Bar */
+  .search-bar {
+    flex: 1;
+    max-width: 560px;
+    height: 48px;
+    background: var(--md-surface-variant);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+    cursor: text;
+  }
+  .search-bar svg { color: var(--md-on-surface-variant); flex-shrink: 0; }
+  .search-placeholder {
+    font: var(--type-body-large);
+    color: var(--md-on-surface-variant);
+  }
+
+  .top-bar-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .icon-btn {
+    width: 48px; height: 48px;
+    border-radius: var(--radius-full);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: background .15s;
+    color: var(--md-on-surface-variant);
+  }
+  .icon-btn:hover { background: rgba(0,0,0,.06); }
+  .badge {
+    position: absolute;
+    top: 6px; right: 6px;
+    min-width: 16px; height: 16px;
+    background: var(--md-error);
+    color: #fff;
+    border-radius: var(--radius-full);
+    font: 700 10px 'Roboto', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 4px;
+    border: 2px solid var(--md-surface);
+  }
+  .avatar-btn {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-full);
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    display: flex; align-items: center; justify-content: center;
+    font: 600 14px 'Google Sans', sans-serif;
+    cursor: pointer;
+    margin-left: 4px;
+  }
+
+  /* ── Layout ──────────────────────────────────────────── */
+  .layout {
+    display: flex;
+    margin-top: 64px;
+    min-height: calc(100vh - 64px);
+  }
+
+  /* ── Navigation Drawer (MD3 spec: 280–360dp for desktop) */
+  .nav-drawer {
+    width: 280px;
+    flex-shrink: 0;
+    background: var(--md-surface);
+    border-right: 1px solid var(--md-outline-variant);
+    padding: 12px 0;
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+  .nav-section-label {
+    font: var(--type-label-medium);
+    font-weight: 600;
+    color: var(--md-on-surface-variant);
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    padding: 16px 28px 8px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px 0 16px;
+    height: 56px;
+    border-radius: var(--radius-full);
+    margin: 2px 12px;
+    cursor: pointer;
+    font: var(--type-label-large);
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--md-on-surface-variant);
+    transition: background .15s;
+    position: relative;
+  }
+  .nav-item:hover { background: rgba(91,33,182,.06); }
+  .nav-item.active {
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    font-weight: 700;
+  }
+  .nav-icon {
+    width: 24px; height: 24px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-label { flex: 1; }
+  .nav-count {
+    background: var(--md-secondary-container);
+    color: var(--md-on-secondary-container);
+    font: 600 11px 'Roboto', sans-serif;
+    border-radius: var(--radius-full);
+    padding: 2px 8px;
+    min-width: 24px;
+    text-align: center;
+  }
+  .nav-divider {
+    height: 1px;
+    background: var(--md-outline-variant);
+    margin: 8px 16px;
+  }
+
+  /* ── Main Content ─────────────────────────────────────── */
+  .main {
+    flex: 1;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* ── Hero Section ─────────────────────────────────────── */
+  .hero {
+    background: linear-gradient(135deg, var(--md-primary-container) 0%, #F5F3FF 60%, var(--md-tertiary-container) 100%);
+    padding: 64px 48px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    min-height: 380px;
+  }
+  .hero-content { flex: 1; max-width: 520px; }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    border-radius: var(--radius-full);
+    padding: 4px 14px;
+    font: var(--type-label-medium);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: .6px;
+    margin-bottom: 20px;
+  }
+  .hero-title {
+    font: var(--type-display-large);
+    font-size: 48px;
+    line-height: 1.1;
+    font-weight: 700;
+    color: var(--md-on-primary-container);
+    margin-bottom: 16px;
+    letter-spacing: -.5px;
+  }
+  .hero-title span { color: var(--md-primary); }
+  .hero-subtitle {
+    font: var(--type-body-large);
+    color: var(--md-on-surface-variant);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+  .hero-actions { display: flex; gap: 12px; align-items: center; }
+  .btn-filled {
+    height: 40px;
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    border: none;
+    border-radius: var(--radius-full);
+    padding: 0 24px;
+    font: var(--type-label-large);
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: box-shadow .15s;
+  }
+  .btn-filled:hover { box-shadow: 0 2px 8px rgba(91,33,182,.35); }
+  .btn-outlined {
+    height: 40px;
+    background: transparent;
+    color: var(--md-primary);
+    border: 1.5px solid var(--md-primary);
+    border-radius: var(--radius-full);
+    padding: 0 24px;
+    font: var(--type-label-large);
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: background .15s;
+  }
+  .btn-outlined:hover { background: var(--md-primary-container); }
+
+  /* Hero visual */
+  .hero-visual {
+    flex-shrink: 0;
+    width: 460px;
+    height: 280px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 12px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .hero-card {
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: flex-end;
+    padding: 12px;
+    font: var(--type-label-medium);
+    font-weight: 600;
+    color: rgba(255,255,255,.95);
+  }
+  .hero-card-1 { background: linear-gradient(160deg, #7C3AED 0%, #5B21B6 100%); }
+  .hero-card-2 { background: linear-gradient(160deg, #0D9488 0%, #0F766E 100%); }
+  .hero-card-3 { background: linear-gradient(160deg, #D97706 0%, #B45309 100%); }
+  .hero-card-4 { background: linear-gradient(160deg, #DB2777 0%, #9D174D 100%); }
+
+  /* ── Filter Chips ─────────────────────────────────────── */
+  .filter-bar {
+    padding: 16px 48px;
+    border-bottom: 1px solid var(--md-outline-variant);
+    background: var(--md-surface);
+    position: sticky;
+    top: 64px;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-mask: linear-gradient(to right, transparent 0, black 8px, black calc(100% - 32px), transparent 100%);
+    scrollbar-width: none;
+  }
+  .filter-bar::-webkit-scrollbar { display: none; }
+  .chip {
+    height: 32px;
+    border-radius: var(--radius-full);
+    border: 1.5px solid var(--md-outline);
+    padding: 0 16px;
+    font: var(--type-label-large);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    white-space: nowrap;
+    background: var(--md-surface);
+    color: var(--md-on-surface-variant);
+    transition: background .12s, border-color .12s;
+    flex-shrink: 0;
+  }
+  .chip:hover { background: var(--md-surface-variant); }
+  .chip.selected {
+    background: var(--md-secondary-container);
+    border-color: var(--md-secondary-container);
+    color: var(--md-on-secondary-container);
+    font-weight: 600;
+  }
+  .chip.selected svg { color: var(--md-on-secondary-container); }
+
+  /* ── Content area ─────────────────────────────────────── */
+  .content { padding: 40px 48px; display: flex; flex-direction: column; gap: 48px; }
+
+  /* ── Promo Banners ─────────────────────────────────────── */
+  .promo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .promo-card {
+    border-radius: var(--radius-lg);
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .promo-card::before {
+    content: '';
+    position: absolute;
+    right: -24px; top: -24px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    opacity: .12;
+  }
+  .promo-sale {
+    background: var(--md-primary-container);
+    border: 1px solid rgba(91,33,182,.15);
+  }
+  .promo-sale::before { background: var(--md-primary); }
+  .promo-member {
+    background: var(--md-tertiary-container);
+    border: 1px solid rgba(13,148,136,.15);
+  }
+  .promo-member::before { background: var(--md-tertiary); }
+  .promo-badge {
+    flex-shrink: 0;
+    width: 56px; height: 56px;
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .promo-sale .promo-badge { background: var(--md-primary); }
+  .promo-member .promo-badge { background: var(--md-tertiary); }
+  .promo-body { flex: 1; }
+  .promo-label {
+    font: var(--type-label-medium);
+    font-weight: 600;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .promo-sale .promo-label { color: var(--md-primary); }
+  .promo-member .promo-label { color: var(--md-tertiary); }
+  .promo-title {
+    font: var(--type-headline-medium);
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .promo-sale .promo-title { color: var(--md-on-primary-container); }
+  .promo-member .promo-title { color: var(--md-on-tertiary-container); }
+  .promo-desc {
+    font: var(--type-body-medium);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .promo-sale .promo-desc { color: var(--md-on-surface-variant); }
+  .promo-member .promo-desc { color: var(--md-on-surface-variant); }
+
+  /* ── Section header ─────────────────────────────────────── */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .section-title {
+    font: var(--type-title-large);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--md-on-surface);
+  }
+  .see-all {
+    font: var(--type-label-large);
+    font-weight: 600;
+    color: var(--md-primary);
+    cursor: pointer;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 4px;
+  }
+
+  /* ── Product Cards ─────────────────────────────────────── */
+  .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .product-card {
+    background: var(--md-surface);
+    border: 1px solid var(--md-outline-variant);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: box-shadow .2s, transform .2s;
+    cursor: pointer;
+  }
+  .product-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,.1);
+    transform: translateY(-2px);
+  }
+  .product-img {
+    width: 100%;
+    aspect-ratio: 1;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .img-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+  }
+  .product-img-1 { background: linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 100%); }
+  .product-img-2 { background: linear-gradient(135deg, #CCFBF1 0%, #99F6E4 100%); }
+  .product-img-3 { background: linear-gradient(135deg, #FEF9C3 0%, #FEF08A 100%); }
+  .product-img-4 { background: linear-gradient(135deg, #FCE7F3 0%, #FBCFE8 100%); }
+  .product-img-5 { background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%); }
+  .product-img-6 { background: linear-gradient(135deg, #F0FDF4 0%, #BBF7D0 100%); }
+  .product-img-7 { background: linear-gradient(135deg, #FFF7ED 0%, #FED7AA 100%); }
+  .product-img-8 { background: linear-gradient(135deg, #F5F3FF 0%, #DDD6FE 100%); }
+
+  /* Product badge */
+  .product-badge {
+    position: absolute;
+    top: 10px; left: 10px;
+    height: 24px;
+    border-radius: var(--radius-full);
+    padding: 0 10px;
+    font: var(--type-label-small);
+    font-weight: 700;
+    display: flex; align-items: center;
+  }
+  .badge-sale {
+    background: var(--md-error-container);
+    color: var(--md-error);
+  }
+  .badge-new {
+    background: var(--md-tertiary-container);
+    color: var(--md-on-tertiary-container);
+  }
+  .wishlist-btn {
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 40px; height: 40px;
+    border-radius: var(--radius-full);
+    background: rgba(255,255,255,.88);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--md-on-surface-variant);
+    border: none;
+    transition: background .15s;
+  }
+  .wishlist-btn:hover { background: rgba(255,255,255,1); color: var(--md-primary); }
+
+  .product-info { padding: 16px; }
+  .product-name {
+    font: var(--type-title-medium);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--md-on-surface);
+    margin-bottom: 4px;
+  }
+  .product-brand {
+    font: var(--type-body-medium);
+    color: var(--md-on-surface-variant);
+    margin-bottom: 8px;
+  }
+  .product-rating {
+    display: flex; align-items: center; gap: 6px;
+    margin-bottom: 12px;
+  }
+  .stars { color: #F59E0B; font-size: 13px; letter-spacing: 1px; }
+  .rating-count {
+    font: var(--type-body-medium);
+    color: var(--md-on-surface-variant);
+  }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .price-group { display: flex; align-items: baseline; gap: 6px; }
+  .price-current {
+    font: var(--type-label-large);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--md-on-surface);
+  }
+  .price-original {
+    font: var(--type-body-medium);
+    color: var(--md-on-surface-variant);
+    text-decoration: line-through;
+  }
+  /* MD3 Filled Icon Button */
+  .add-btn {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-full);
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background .15s, box-shadow .15s;
+    flex-shrink: 0;
+  }
+  .add-btn:hover {
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    box-shadow: 0 2px 8px rgba(91,33,182,.3);
+  }
+
+  /* ── Collection Cards ─────────────────────────────────── */
+  .collection-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .collection-card {
+    border-radius: var(--radius-xl);
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform .2s;
+  }
+  .collection-card:hover { transform: scale(1.02); }
+  .collection-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,.55) 0%, transparent 60%);
+  }
+  .col-1 { background: linear-gradient(135deg, #5B21B6 0%, #7C3AED 100%); }
+  .col-2 { background: linear-gradient(135deg, #065F46 0%, #0D9488 100%); }
+  .col-3 { background: linear-gradient(135deg, #7F1D1D 0%, #B91C1C 100%); }
+  .col-tag {
+    position: relative;
+    z-index: 1;
+    background: rgba(255,255,255,.18);
+    backdrop-filter: blur(4px);
+    color: #fff;
+    border-radius: var(--radius-full);
+    padding: 4px 12px;
+    font: var(--type-label-medium);
+    font-weight: 600;
+    width: fit-content;
+    margin-bottom: 8px;
+  }
+  .col-name {
+    position: relative; z-index: 1;
+    font: var(--type-title-large);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .col-meta {
+    position: relative; z-index: 1;
+    font: var(--type-body-medium);
+    color: rgba(255,255,255,.75);
+  }
+
+  /* ── Newsletter / CTA ─────────────────────────────────── */
+  .newsletter {
+    background: var(--md-inverse-surface);
+    border-radius: var(--radius-xl);
+    padding: 48px 56px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+  .newsletter-body { flex: 1; }
+  .newsletter-title {
+    font: var(--type-headline-large);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--md-inverse-on-surface);
+    margin-bottom: 8px;
+  }
+  .newsletter-desc {
+    font: var(--type-body-large);
+    color: rgba(255,255,255,.65);
+  }
+  .newsletter-form {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .text-field {
+    height: 48px;
+    width: 280px;
+    background: rgba(255,255,255,.1);
+    border: 1.5px solid rgba(255,255,255,.25);
+    border-radius: var(--radius-full);
+    padding: 0 20px;
+    font: var(--type-body-large);
+    color: #fff;
+    outline: none;
+  }
+  .text-field::placeholder { color: rgba(255,255,255,.45); }
+  .text-field:focus { border-color: rgba(255,255,255,.6); }
+  .btn-filled-tonal {
+    height: 48px;
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    border: none;
+    border-radius: var(--radius-full);
+    padding: 0 28px;
+    font: var(--type-label-large);
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: box-shadow .15s;
+  }
+  .btn-filled-tonal:hover { box-shadow: 0 2px 10px rgba(91,33,182,.5); }
+
+  /* ── Footer ──────────────────────────────────────────── */
+  footer {
+    background: var(--md-surface-variant);
+    border-top: 1px solid var(--md-outline-variant);
+    padding: 48px 48px 32px;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 280px 1fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 40px;
+  }
+  .footer-brand .logo-text { font-size: 20px; margin-bottom: 12px; }
+  .footer-tagline {
+    font: var(--type-body-medium);
+    color: var(--md-on-surface-variant);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .footer-col-title {
+    font: var(--type-label-large);
+    font-weight: 700;
+    color: var(--md-on-surface);
+    margin-bottom: 16px;
+    font-size: 13px;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+  }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-links a {
+    font: var(--type-body-medium);
+    color: var(--md-on-surface-variant);
+    text-decoration: none;
+    transition: color .12s;
+  }
+  .footer-links a:hover { color: var(--md-primary); }
+  .footer-bottom {
+    border-top: 1px solid var(--md-outline-variant);
+    padding-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-copy {
+    font: var(--type-body-medium);
+    color: var(--md-on-surface-variant);
+  }
+  .footer-note {
+    font: var(--type-label-small);
+    color: var(--md-on-surface-variant);
+    display: flex; align-items: center; gap: 4px;
+  }
+  .md3-chip-footer {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    border-radius: var(--radius-full);
+    padding: 3px 10px;
+    font: var(--type-label-small);
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Top App Bar ─────────────────────────────────────── -->
+<header class="top-bar">
+  <div class="top-bar-logo">
+    <div class="logo-avatar">S3</div>
+    <span class="logo-text">ShopM3</span>
+  </div>
+
+  <div class="search-bar">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <span class="search-placeholder">Search products, brands...</span>
+  </div>
+
+  <div class="top-bar-actions">
+    <div class="icon-btn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="badge">3</span>
+    </div>
+    <div class="icon-btn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </div>
+    <div class="icon-btn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span class="badge">2</span>
+    </div>
+    <div class="avatar-btn">SL</div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ── Navigation Drawer ─────────────────────────────── -->
+  <nav class="nav-drawer">
+    <div class="nav-section-label">Menu</div>
+
+    <div class="nav-item active">
+      <div class="nav-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      </div>
+      <span class="nav-label">Home</span>
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </div>
+      <span class="nav-label">Browse</span>
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <span class="nav-label">Saved</span>
+      <span class="nav-count">12</span>
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </div>
+      <span class="nav-label">Orders</span>
+    </div>
+
+    <div class="nav-divider"></div>
+    <div class="nav-section-label">Categories</div>
+
+    <div class="nav-item">
+      <div class="nav-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+      </div>
+      <span class="nav-label">Women's</span>
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+      </div>
+      <span class="nav-label">Men's</span>
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <span class="nav-label">Electronics</span>
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <span class="nav-label">Home & Living</span>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-item">
+      <div class="nav-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      </div>
+      <span class="nav-label">Account</span>
+    </div>
+  </nav>
+
+  <!-- ── Main ──────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-content">
+        <span class="hero-eyebrow">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          New Arrivals — Spring 2025
+        </span>
+        <h1 class="hero-title">Style That <span>Speaks</span> for Itself</h1>
+        <p class="hero-subtitle">Discover curated collections from top brands. Free shipping on orders over $50.</p>
+        <div class="hero-actions">
+          <button class="btn-filled">
+            Shop now
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <button class="btn-outlined">View lookbook</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card hero-card-1">Women's</div>
+        <div class="hero-card hero-card-2">Outdoor</div>
+        <div class="hero-card hero-card-3">Accessories</div>
+        <div class="hero-card hero-card-4">Beauty</div>
+      </div>
+    </section>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <div class="chip selected">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        All
+      </div>
+      <div class="chip">Women's</div>
+      <div class="chip">Men's</div>
+      <div class="chip">Kids</div>
+      <div class="chip">Electronics</div>
+      <div class="chip">Home &amp; Living</div>
+      <div class="chip">Beauty</div>
+      <div class="chip">Sports</div>
+      <div class="chip">Accessories</div>
+    </div>
+
+    <div class="content">
+
+      <!-- Promo Banners -->
+      <div class="promo-row">
+        <div class="promo-card promo-sale">
+          <div class="promo-badge">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12.79 2.17L9.71.89 7.8 3.56 4.6 3.35 3.33 6.42.83 8.11l.89 3.08-1.72 2.76 1.72 2.76-.89 3.08 2.5 1.69 1.27 3.07 3.2-.21 1.91 2.67 3.08-1.28 3.08 1.28 1.91-2.67 3.2.21 1.27-3.07 2.5-1.69-.89-3.08 1.72-2.76-1.72-2.76.89-3.08-2.5-1.69-1.27-3.07-3.2.21-1.91-2.67-3.08 1.28zM11 7h2v6h-2zm0 8h2v2h-2z"/></svg>
+          </div>
+          <div class="promo-body">
+            <div class="promo-label">Limited time</div>
+            <div class="promo-title">Up to 50% off Summer Sale</div>
+            <div class="promo-desc">Hundreds of items reduced across all categories.</div>
+            <button class="btn-filled">Shop the sale</button>
+          </div>
+        </div>
+        <div class="promo-card promo-member">
+          <div class="promo-badge">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+          </div>
+          <div class="promo-body">
+            <div class="promo-label">Members only</div>
+            <div class="promo-title">Free express shipping all month</div>
+            <div class="promo-desc">Sign up and get exclusive perks every week.</div>
+            <button class="btn-outlined" style="border-color:var(--md-tertiary);color:var(--md-tertiary);">Join free</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trending -->
+      <section>
+        <div class="section-header">
+          <h2 class="section-title">Trending right now</h2>
+          <a class="see-all" href="#">See all <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+        <div class="product-grid">
+
+          <!-- Card 1 -->
+          <div class="product-card">
+            <div class="product-img product-img-1">
+              <div class="img-placeholder">🧥</div>
+              <span class="product-badge badge-sale">Sale −20%</span>
+              <button class="wishlist-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            </div>
+            <div class="product-info">
+              <div class="product-name">Linen Blazer</div>
+              <div class="product-brand">Studio Basics</div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(128)</span></div>
+              <div class="product-footer">
+                <div class="price-group">
+                  <span class="price-current">$79</span>
+                  <span class="price-original">$99</span>
+                </div>
+                <button class="add-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="product-card">
+            <div class="product-img product-img-2">
+              <div class="img-placeholder">👗</div>
+              <button class="wishlist-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            </div>
+            <div class="product-info">
+              <div class="product-name">Silk Wrap Dress</div>
+              <div class="product-brand">Maison Élite</div>
+              <div class="product-rating"><span class="stars">★★★★</span><span class="rating-count">(84)</span></div>
+              <div class="product-footer">
+                <div class="price-group"><span class="price-current">$149</span></div>
+                <button class="add-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="product-card">
+            <div class="product-img product-img-3">
+              <div class="img-placeholder">👟</div>
+              <span class="product-badge badge-new">New</span>
+              <button class="wishlist-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            </div>
+            <div class="product-info">
+              <div class="product-name">Running Sneakers</div>
+              <div class="product-brand">SwiftStep</div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(312)</span></div>
+              <div class="product-footer">
+                <div class="price-group"><span class="price-current">$129</span></div>
+                <button class="add-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="product-card">
+            <div class="product-img product-img-4">
+              <div class="img-placeholder">👜</div>
+              <span class="product-badge badge-sale">Sale −35%</span>
+              <button class="wishlist-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            </div>
+            <div class="product-info">
+              <div class="product-name">Leather Crossbody</div>
+              <div class="product-brand">Artisan Co.</div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(56)</span></div>
+              <div class="product-footer">
+                <div class="price-group">
+                  <span class="price-current">$89</span>
+                  <span class="price-original">$138</span>
+                </div>
+                <button class="add-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Featured Collections -->
+      <section>
+        <div class="section-header">
+          <h2 class="section-title">Featured collections</h2>
+          <a class="see-all" href="#">View all collections <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+        <div class="collection-grid">
+          <div class="collection-card col-1">
+            <span class="col-tag">42 pieces</span>
+            <div class="col-name">Minimalist Wardrobe</div>
+            <div class="col-meta">From $24</div>
+          </div>
+          <div class="collection-card col-2">
+            <span class="col-tag">19 pieces</span>
+            <div class="col-name">Outdoor Gear</div>
+            <div class="col-meta">From $49</div>
+          </div>
+          <div class="collection-card col-3">
+            <span class="col-tag">32 items</span>
+            <div class="col-name">Beauty Edit</div>
+            <div class="col-meta">From $12</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- You Might Like -->
+      <section>
+        <div class="section-header">
+          <h2 class="section-title">You might like</h2>
+          <a class="see-all" href="#">See all <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+        <div class="product-grid">
+
+          <div class="product-card">
+            <div class="product-img product-img-5">
+              <div class="img-placeholder">🎧</div>
+              <button class="wishlist-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            </div>
+            <div class="product-info">
+              <div class="product-name">Wireless Headphones</div>
+              <div class="product-brand">AudioPure</div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(824)</span></div>
+              <div class="product-footer">
+                <div class="price-group"><span class="price-current">$249</span></div>
+                <button class="add-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img product-img-6">
+              <div class="img-placeholder">🧴</div>
+              <span class="product-badge badge-new">New</span>
+              <button class="wishlist-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            </div>
+            <div class="product-info">
+              <div class="product-name">Rose Face Serum</div>
+              <div class="product-brand">Bloom Beauty</div>
+              <div class="product-rating"><span class="stars">★★★★</span><span class="rating-count">(219)</span></div>
+              <div class="product-footer">
+                <div class="price-group"><span class="price-current">$48</span></div>
+                <button class="add-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img product-img-7">
+              <div class="img-placeholder">🧘</div>
+              <span class="product-badge badge-sale">Sale −17%</span>
+              <button class="wishlist-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            </div>
+            <div class="product-info">
+              <div class="product-name">Yoga Mat Pro</div>
+              <div class="product-brand">ZenFlex</div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(748)</span></div>
+              <div class="product-footer">
+                <div class="price-group">
+                  <span class="price-current">$68</span>
+                  <span class="price-original">$83</span>
+                </div>
+                <button class="add-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img product-img-8">
+              <div class="img-placeholder">☕</div>
+              <button class="wishlist-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            </div>
+            <div class="product-info">
+              <div class="product-name">Ceramic Mug Set</div>
+              <div class="product-brand">Home Studio</div>
+              <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(331)</span></div>
+              <div class="product-footer">
+                <div class="price-group"><span class="price-current">$36</span></div>
+                <button class="add-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Newsletter CTA -->
+      <div class="newsletter">
+        <div class="newsletter-body">
+          <div class="newsletter-title">Stay in the loop</div>
+          <div class="newsletter-desc">Get early access to sales, new arrivals, and style inspiration.</div>
+        </div>
+        <div class="newsletter-form">
+          <input type="email" class="text-field" placeholder="your@email.com">
+          <button class="btn-filled-tonal">Subscribe</button>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <div class="logo-avatar">S3</div>
+            <span class="logo-text">ShopM3</span>
+          </div>
+          <p class="footer-tagline">A Material Design 3 shopping experience — curated products, seamless checkout, and style you love.</p>
+        </div>
+        <div>
+          <div class="footer-col-title">Shop</div>
+          <ul class="footer-links">
+            <li><a href="#">New arrivals</a></li>
+            <li><a href="#">Women's</a></li>
+            <li><a href="#">Men's</a></li>
+            <li><a href="#">Electronics</a></li>
+            <li><a href="#">Sale</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Help</div>
+          <ul class="footer-links">
+            <li><a href="#">Track order</a></li>
+            <li><a href="#">Returns</a></li>
+            <li><a href="#">Shipping info</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Contact us</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Company</div>
+          <ul class="footer-links">
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Press</a></li>
+            <li><a href="#">Sustainability</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2025 ShopM3. All rights reserved.</span>
+        <span class="footer-note">Built with <span class="md3-chip-footer">Material Design 3</span></span>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+</body>
+</html>
